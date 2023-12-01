@@ -16,6 +16,7 @@ pygame.display.set_caption('Endless Runner')
 score = 0
 speed = 3
 
+
 class Player(pygame.sprite.Sprite):
     
     def __init__(self):
