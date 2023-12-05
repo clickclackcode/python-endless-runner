@@ -14,7 +14,6 @@ class Player(pygame.sprite.Sprite):
         self.y = game_height - self.height
         self.action = 'running'
         self.health = 5
-        
         # load the running sprites
         self.running_sprites = []
         self.running_sprite_index = 0
@@ -65,12 +64,28 @@ class Player(pygame.sprite.Sprite):
                 self.invincibility_frame -= 1
             if self.invincibility_frame % 10 == 0:
                 game.blit(jumping_sprite, (self.x, self.y))
-            
+        elif self.action == 'walk_forward':
+            running_sprite = self.running_sprites[int(self.running_sprite_index)]
+            if self.invincibility_frame > 0:
+                self.invincibility_frame -= 1
+            if self.invincibility_frame % 10 == 0:
+                self.x += 1
+                game.blit(running_sprite, (self.x, self.y))
+                
+        elif self.action == 'walk_backward':
+            if self.x - 1 <= 1:
+                self.x = 1
+            running_sprite = self.running_sprites[int(self.running_sprite_index)]
+            if self.invincibility_frame > 0:
+                self.invincibility_frame -= 1
+            if self.invincibility_frame % 10 == 0:
+                self.x -= 1
+                game.blit(running_sprite, (self.x, self.y))    
     def update(self):
         ''' update the sprite index so the next sprite image is drawn '''
         ''' also update the y position when jumping or landing '''
         
-        if self.action == 'running':
+        if self.action == 'running' or self.action == 'walk_forward' or self.action == 'walk_backward':
             
             # increment the sprite index by 0.2
             # so it takes 5 frames to get to the next index
@@ -125,3 +140,6 @@ class Player(pygame.sprite.Sprite):
         ''' make the player go to jumping action when not already jumping or landing '''
         if self.action not in ['jumping', 'landing']:
             self.action = 'jumping'
+    def set_action(self, action):
+        if self.action not in ['jumping', 'landing']:
+            self.action = action

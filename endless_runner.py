@@ -43,6 +43,7 @@ for i in range(8):
 
 # game loop
 clock = pygame.time.Clock()
+start_time = pygame.time.get_ticks()
 quit = False
 while not quit:
     
@@ -55,7 +56,16 @@ while not quit:
         # press SPACE to jump
         if event.type == KEYDOWN and event.key == K_SPACE:
             player.jump()
-
+        # press SPACE to jump
+        if event.type == KEYDOWN and event.key == K_w:
+            player.jump()
+        # press key 'D' to walk forward
+        if event.type == KEYDOWN and event.key == K_d:
+            player.set_action('walk_forward')
+        # press key 'A' to walk forward
+        if event.type == KEYDOWN and event.key == K_a:
+            player.set_action('walk_backward')
+            
     # loads the background
     background_manager(
         game,     # pygame display
@@ -76,16 +86,14 @@ while not quit:
     # update the position of the obstacle
     obstacle.update()
     
-    # add to score and reset the obstacle when it goes off screen
-    if obstacle.x < obstacle.image.get_width() * -1:
-        
-        score += 1
+    #reset the obstacle
+    if obstacle.x <= 0:
         obstacle.reset()
-        
-        # increase the speed after clearing 2 obstacles
-        # but the max it can go up to is 10
-        if score % 2 == 0 and speed < 10:
-            speed += 1
+        speed += 1
+
+    current_time = pygame.time.get_ticks()
+    elapsed_time = (current_time - start_time) // 1000  # Convert to seconds
+    score = elapsed_time
     
     # check if player collides with the obstacle
     if pygame.sprite.spritecollide(player, obstacles_group, True, pygame.sprite.collide_mask):
